@@ -5,14 +5,12 @@
 
 int main()
 {
-    int n;
     int to_read;
     int write_to;
-    char buffer[BUFFERSIZE];
     char *line;
 
     to_read=open("cool.txt", O_RDONLY);
-    write_to=open("also_cool.txt", O_CREAT|O_WRONLY);
+    write_to=open("also_cool.txt", O_CREAT|O_RDWR, 777);
 
     line = get_next_line(to_read);
     while (line != NULL)
@@ -20,9 +18,8 @@ int main()
         write(write_to, "|", 1);
         write(write_to, line, strlen(line));
         
-        //gnl
         line=get_next_line(to_read);
-        //gnl
+
         write(write_to, "|", 1);
     }
 }
