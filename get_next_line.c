@@ -32,37 +32,51 @@ int find_newline(char *line)
     while (line[i] != '\0' && line[i] != '\n')
         i++;
     if (line[i] == '\n')
-        return(i);
+        return(i + 1);
     else
         return(-1);
 }
 
-char *add_to_line(char *old_line, const char *new_part)
+char    *allocate_line(char *old_line, const char *new_part, int nl)
 {
-    char *expanded_line;
     size_t  len;
-    size_t  i1;
-    size_t  i2;
-
-    len = ft_strlen(old_line) + ft_strlen(new_part);
+    char    *expanded_line;
+    
+    if (nl == -1)
+        len = ft_strlen(old_line) + ft_strlen(new_part);
+    else 
+        len = ft_strlen(old_line) + nl;
     if (len == 0)
         return (NULL);
     expanded_line = (char *) malloc(sizeof(char) * (len + 1));
     if (expanded_line == NULL)
         return (NULL);
-    i1 = 0;
-    while(old_line != NULL && old_line[i1] != '\0')
+    return (expanded_line);
+}
+
+char *add_to_line(char *old_line, const char *new_part, int nl)
+{
+    char *expanded_line;
+    size_t  i1;
+    size_t  i2;
+
+    expanded_line = allocate_line(old_line, new_part, nl);
+    if (expanded_line != NULL)
     {
-        expanded_line[i1] = old_line[i1];
-        i1++;
+        i1 = 0;
+        while(old_line != NULL && old_line[i1] != '\0')
+        {
+            expanded_line[i1] = old_line[i1];
+            i1++;
+        }
+        i2 = 0;
+        while(new_part[i2] != '\0' && i2 != nl)
+        {
+            expanded_line[i1 + i2] = new_part[i2];
+            i2++;
+        }
+        expanded_line[i1 + i2] = '\0';
     }
-    i2 = 0;
-    while(new_part[i2] != '\0')
-    {
-        expanded_line[i1 + i2] = new_part[i2];
-        i2++;
-    }
-    expanded_line[i1 + i2] = '\0';
     free(old_line);
     return(expanded_line);
 }
@@ -82,9 +96,11 @@ char    *get_next_line(int fd)
 	while (find_nl == -1)
 	{
 		n=read(fd, to_store, BUFFERSIZE);
+        
 		to_store[n] = '\0';
-        line = add_to_line(line, to_store);
 		find_nl = find_newline(to_store);
+        line = add_to_line(line, to_store, find_nl);
+
 		if (n == 0 )
 		{
 			free(to_store);
