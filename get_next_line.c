@@ -81,32 +81,51 @@ char *add_to_line(char *old_line, const char *new_part, int nl)
     return(expanded_line);
 }
 
+void    offset(char *to_store, int find_nl)
+{
+    int i;
+
+    i = 0;
+    while (to_store[i + find_nl] != '\0')
+    {
+        to_store[i] = to_store[i + find_nl];
+        i++;
+    }
+    while (to_store[i] != '\0')
+    {
+        to_store[i] = '\0';
+        i++;
+    }
+}
+
 char    *get_next_line(int fd)
 {
     char *line;
-    char *to_store;
+    static char to_store[BUFFERSIZE + 1];
     int n;
 	int	find_nl;
 
-    to_store = (char *)malloc(sizeof(char) * BUFFERSIZE + 1);
-    if (to_store == NULL)
-		return (NULL);
+    // to_store = (char *)malloc(sizeof(char) * BUFFERSIZE + 1);
+    // if (to_store == NULL)
+		// return (NULL);
     line = NULL;
 	find_nl = -1;
 	while (find_nl == -1)
 	{
-		n=read(fd, to_store, BUFFERSIZE);
-        
-		to_store[n] = '\0';
-		find_nl = find_newline(to_store);
+        // n = ft_strlen(to_store);
+        if (to_store[0] == '\0')
+        {
+            n=read(fd, to_store, BUFFERSIZE);
+            if (n == 0 )
+                break ;
+            to_store[n] = '\0';
+        }
+        find_nl = find_newline(to_store);
         line = add_to_line(line, to_store, find_nl);
-
-		if (n == 0 )
-		{
-			free(to_store);
-			to_store = NULL;
-			break ;
-		}
+        offset(to_store, find_nl);
+        printf("DEBUG: to_store |%s|, %d\n", to_store, n);
 	}	
+    // free(to_store);
+    // to_store = NULL;
     return (line);
 }
