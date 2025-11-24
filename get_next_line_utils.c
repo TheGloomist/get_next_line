@@ -6,7 +6,7 @@
 /*   By: iazaitce <iazaitce@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/06/13 16:28:43 by iazaitce      #+#    #+#                 */
-/*   Updated: 2025/11/19 16:19:33 by iazaitce      ########   odam.nl         */
+/*   Updated: 2025/11/21 17:54:17 by iazaitce      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 size_t	ft_strlen(const char *str)
 {
-	size_t	ret;
+	size_t	ret_val;
 
-	ret = 0;
+	ret_val = 0;
 	if (!str)
-		return (ret);
-	while (str[ret] != '\0')
-		ret++;
-	return (ret);
+		return (ret_val);
+	while (str[ret_val] != '\0')
+		ret_val++;
+	return (ret_val);
 }
 
 char	*read_error(char *to_free)
@@ -30,14 +30,14 @@ char	*read_error(char *to_free)
 	return (NULL);
 }
 
-void	offset(char *to_store, int find_nl)
+void	offset(char *to_store, int nl_pos)
 {
 	int	i;
 
 	i = 0;
-	while (to_store[i + find_nl] != '\0')
+	while (to_store[nl_pos + i] != '\0')
 	{
-		to_store[i] = to_store[i + find_nl];
+		to_store[i] = to_store[nl_pos + i];
 		i++;
 	}
 	while (to_store[i] != '\0')

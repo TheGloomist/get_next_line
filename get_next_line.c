@@ -6,7 +6,7 @@
 /*   By: iazaitce <iazaitce@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/06/13 16:28:38 by iazaitce      #+#    #+#                 */
-/*   Updated: 2025/11/21 15:56:06 by iazaitce      ########   odam.nl         */
+/*   Updated: 2025/11/21 17:51:55 by iazaitce      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	to_store[BUFFER_SIZE + 1];
 	int			i;
-	int			find_nl;
+	int			nl_pos;
 
 	line = NULL;
-	find_nl = -1;
-	while (find_nl == -1)
+	nl_pos = -1;
+	while (nl_pos == -1)
 	{
 		if (to_store[0] == '\0')
 		{
@@ -89,11 +89,11 @@ char	*get_next_line(int fd)
 				return (read_error(line));
 			to_store[i] = '\0';
 		}
-		find_nl = nl_position(to_store);
-		line = add_to_line(line, to_store, find_nl);
+		nl_pos = nl_position(to_store);
+		line = add_to_line(line, to_store, nl_pos);
 		if (line == NULL)
 			return (NULL);
-		offset(to_store, find_nl);
+		offset(to_store, nl_pos);
 	}
 	return (line);
 }
